@@ -10,12 +10,20 @@ int main(){
     //Acceleration due to gravity (pixels/frame)/frame
     const int gravity{1};
 
-    //Rectangle dimension
-    const int width{50};
-    const int height{80};
+    //texture sprite
+    Texture2D scarfy = LoadTexture("textures/scarfy.png");
+    Rectangle scarfyRec;
+    scarfyRec.width = scarfy.width/6; //because the sprite has 6 image
+    scarfyRec.height = scarfy.height;
+    scarfyRec.x = 0;
+    scarfyRec.y = 0;
+
+    //exactly lined in the center
+    Vector2 scarfyPos;
+    scarfyPos.x = window_width/2 - scarfyRec.width/2;
+    scarfyPos.y = window_height - scarfyRec.height;
     
     //Initial position
-    int posY{window_height - height};
     int velocity{0};
 
     //check rectangle is in the air or not
@@ -30,7 +38,7 @@ int main(){
         ClearBackground(WHITE);
         
         //Perform ground check
-        if(posY >= window_height - height){
+        if(scarfyPos.y >= window_height - scarfyRec.width){
             //rectangle is in the ground
             velocity = 0;
             isInAir = false;
@@ -46,14 +54,16 @@ int main(){
         }
 
         //Update position
-        posY += velocity;//posY = posY + velocity
+        scarfyPos.y += velocity;//posY = posY + velocity
         
         //Draw the object
-        DrawRectangle(window_width/2, posY, width, height, BLACK);
+        DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
 
         //Stop drawing
         EndDrawing();
     }
+    
+    UnloadTexture(scarfy); //Unload it from leaking the GPU VRAM
     CloseWindow(); //Close window so it doesn't leak
 
     return 0;
