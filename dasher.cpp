@@ -7,8 +7,8 @@ int main(){
     const int window_height = 480;
     InitWindow(window_width, window_height, "Dashing but no dapping by Adjie Wahyudinata");
 
-    //Acceleration due to gravity (pixels/frame)/frame
-    const int gravity{1};
+    //Acceleration due to gravity (pixels/sec)/second
+    const int gravity{1'000};
 
     //texture sprite
     Texture2D scarfy = LoadTexture("textures/scarfy.png");
@@ -28,15 +28,19 @@ int main(){
 
     //check rectangle is in the air or not
     bool isInAir{true};
-    const int jumpVelocity{-20};
+    //jump velocity (pixels/sec)
+    const int jumpVelocity{-600};
 
     SetTargetFPS(60);
     while (!WindowShouldClose())//! = negation operator. Negates a truth value
     {
+        //deltaTime (time since last frame)
+        const float dT{GetFrameTime()};
+        
         //Start drawing
         BeginDrawing();
         ClearBackground(WHITE);
-        
+
         //Perform ground check
         if(scarfyPos.y >= window_height - scarfyRec.width){
             //rectangle is in the ground
@@ -44,7 +48,7 @@ int main(){
             isInAir = false;
         }else{
             //Apply gravity, so rectangle is in the air
-            velocity += gravity;
+            velocity += gravity * dT;
             isInAir = true;
         }
 
@@ -54,7 +58,7 @@ int main(){
         }
 
         //Update position
-        scarfyPos.y += velocity;//posY = posY + velocity
+        scarfyPos.y += velocity * dT;//posY = posY + velocity * dT
         
         //Draw the object
         DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
