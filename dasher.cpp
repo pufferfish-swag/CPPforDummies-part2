@@ -11,14 +11,28 @@ int main(){
     //Acceleration due to gravity (pixels/sec)/second
     const int gravity{1'000};
 
+    //I do this because it anooys me with the yellow underline if i do it manual lol
     const float divide = 8;
+
     //texture & variable of nebula (enemy)
     Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
     Rectangle nebRec{0.0, 0.0, nebula.width/divide, nebula.height/divide};
     Vector2 nebPos{window_width, window_height - nebRec.height};
 
+    Rectangle neb2Rec{0.0, 0.0, nebula.width/divide, nebula.height/divide};
+    Vector2 neb2Pos{window_width + 300, window_height - nebRec.height};
+
+    //animation frame of the nebula
+    int nebFrame{};
+    const float nebUdateTime{1.0/12.0};
+    float nebRunningTime{};
+
+    int neb2Frame{};
+    const float neb2UpdateTime{1.0/16.0};
+    float neb2RunningTime;
+
     //nebula X velocity (pixels/sec)
-    int nebVel{-600};
+    int nebVel{-200};
 
     //texture & variable of scarfy (character)
     Texture2D scarfy = LoadTexture("textures/scarfy.png");
@@ -75,12 +89,14 @@ int main(){
 
         //update nebula position
         nebPos.x += nebVel * dT;
+        neb2Pos.x += nebVel * dT;
+
         //Update position
         scarfyPos.y += velocity * dT;//posY = posY + velocity * dT
 
         //Check if scarfy jump or not. if it is, froze the animation.
         if(!isInAir){
-        //Update running time
+        //Update running animation time
             runningTime += dT;
             if(runningTime >= updateTime){
                 runningTime = 0.0;
@@ -93,10 +109,35 @@ int main(){
             }
         }
 
+        //Update nebula animation frame
+        nebRunningTime += dT;
+        if(nebRunningTime >= nebUdateTime){
+            nebRunningTime = 0.0;
+            //Update anim frame
+            nebRec.x = nebFrame * nebRec.width;
+            nebFrame++;
+            if(nebFrame > 7){
+                nebFrame = 0;
+            }
+        }
+
+        //Update 2nd nebula animation frame
+        neb2RunningTime += dT;
+        if(neb2RunningTime >= neb2UpdateTime){
+            neb2RunningTime = 0.0;
+            //Update anim frame
+            neb2Rec.x = neb2Frame * neb2Rec.width;
+            neb2Frame++;
+            if(neb2Frame > 7){
+                neb2Frame = 0;
+            }
+        }
+
         //Draw scarfy
         DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
         //Draw nebula
         DrawTextureRec(nebula, nebRec, nebPos, WHITE);
+        DrawTextureRec(nebula, neb2Rec, neb2Pos, RED);
 
         //Stop drawing
         EndDrawing();
