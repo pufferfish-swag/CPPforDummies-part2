@@ -1,5 +1,15 @@
 #include "raylib.h"
 
+struct AnimData
+{
+    Rectangle rec;
+    Vector2 pos;
+    int frame;
+    float updateTime;
+    float runningTime;
+};
+
+
 int main(){
     
     //Window dimension
@@ -36,6 +46,19 @@ int main(){
 
     //texture & variable of scarfy (character)
     Texture2D scarfy = LoadTexture("textures/scarfy.png");
+    AnimData scarfyData;
+    scarfyData.rec.width = scarfy.width/6;
+    scarfyData.rec.height = scarfy.height;
+    scarfyData.rec.x = 0;
+    scarfyData.rec.y = 0;
+
+    scarfyData.pos.x = window_width/2 - scarfyData.rec.width/2;
+    scarfyData.pos.y = window_height - scarfyData.rec.height;
+
+    scarfyData.frame = 0;
+    scarfyData.updateTime = 1.0/12.0;
+    scarfyData.runningTime = 0.0;
+
     Rectangle scarfyRec;
     scarfyRec.width = scarfy.width/6; //because the sprite has 6 image
     scarfyRec.height = scarfy.height;
