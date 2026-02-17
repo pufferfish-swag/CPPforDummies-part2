@@ -28,24 +28,25 @@ int main(){
 
     //texture & variable of nebula (enemy)
     Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
+    
     //AnimData for nebula
-    AnimData nebData{
-        {0.0, 0.0, nebula.width/divide, nebula.height/divide}, //Rectangle rec
-        {windowDimension[0], windowDimension[1] - nebula.height/divide}, //Vector2 pos
-        0, //int frame
-        1.0/12.0, //float updateTime
-        0 //float runningTime
-    };
+    AnimData nebulaEnemy[3]{};
 
-    AnimData neb2Data{
-        {0.0, 0.0, nebula.width/divide, nebula.height/divide}, //Rectangle rec
-        {windowDimension[0] + 300, windowDimension[1] - nebula.height/divide}, //Vector2 pos
-        0, //int frame
-        1.0/16.0, //float updateTime
-        0 //float runningTime
-    };
+    for (int i = 0; i < 3; i++){
+        nebulaEnemy[i].rec.x = 0.0;
+        nebulaEnemy[i].rec.y = 0.0;
+        nebulaEnemy[i].rec.width = nebula.width/divide;
+        nebulaEnemy[i].rec.height = nebula.height/divide;
+        nebulaEnemy[i].pos.y = windowDimension[1] - nebula.height/divide;//x has a different number, so it didn't included
+        nebulaEnemy[i].frame = 0;
+        nebulaEnemy[i].runningTime = 0.0;
+        nebulaEnemy[i].updateTime = 1.0/16.0;
+    }
 
-    AnimData nebulaEnemy[2]{nebData, neb2Data};
+    //Nebula enemy array
+    nebulaEnemy[0].pos.x = windowDimension[0];
+    nebulaEnemy[1].pos.x = windowDimension[0] + 300;
+    nebulaEnemy[2].pos.x = windowDimension[0] + 600;
 
     //nebula X velocity (pixels/sec)
     int nebVel{-200};
@@ -150,7 +151,7 @@ int main(){
         //Draw nebula
         DrawTextureRec(nebula, nebulaEnemy[0].rec, nebulaEnemy[0].pos, WHITE);
         DrawTextureRec(nebula, nebulaEnemy[1].rec, nebulaEnemy[1].pos, RED);
-
+        
         //Stop drawing
         EndDrawing();
     }
