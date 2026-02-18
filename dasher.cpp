@@ -30,23 +30,20 @@ int main(){
     Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
     
     //AnimData for nebula
-    AnimData nebulaEnemy[3]{};
+    const int sizeOfNebulaEnemy{10};
+    AnimData nebulaEnemy[sizeOfNebulaEnemy]{};
 
-    for (int i = 0; i < 3; i++){
+    for (int i = 0; i < sizeOfNebulaEnemy; i++){
         nebulaEnemy[i].rec.x = 0.0;
         nebulaEnemy[i].rec.y = 0.0;
         nebulaEnemy[i].rec.width = nebula.width/divide;
         nebulaEnemy[i].rec.height = nebula.height/divide;
-        nebulaEnemy[i].pos.y = windowDimension[1] - nebula.height/divide;//x has a different number, so it didn't included
+        nebulaEnemy[i].pos.y = windowDimension[1] - nebula.height/divide;
+        nebulaEnemy[i].pos.x = windowDimension[0] + i * 300; //multiplying teh nebula enemy
         nebulaEnemy[i].frame = 0;
         nebulaEnemy[i].runningTime = 0.0;
         nebulaEnemy[i].updateTime = 1.0/16.0;
     }
-
-    //Nebula enemy array
-    nebulaEnemy[0].pos.x = windowDimension[0];
-    nebulaEnemy[1].pos.x = windowDimension[0] + 300;
-    nebulaEnemy[2].pos.x = windowDimension[0] + 600;
 
     //nebula X velocity (pixels/sec)
     int nebVel{-200};
@@ -100,9 +97,10 @@ int main(){
             velocity += jumpVelocity;
         }
 
-        //update nebula position
-        nebulaEnemy[0].pos.x += nebVel * dT;
-        nebulaEnemy[1].pos.x += nebVel * dT;
+        for(int i = 0; i < sizeOfNebulaEnemy; i++){
+            //Update position of each nebula
+            nebulaEnemy[i].pos.x += nebVel * dT;
+        }
 
         //Update position
         scarfyData.pos.y += velocity * dT;//posY = posY + velocity * dT
@@ -122,35 +120,26 @@ int main(){
             }
         }
 
-        //Update nebula animation frame
-        nebulaEnemy[0].runningTime += dT;
-        if(nebulaEnemy[0].runningTime >= nebulaEnemy[0].updateTime){
-            nebulaEnemy[0].runningTime = 0.0;
-            //Update anim frame
-            nebulaEnemy[0].rec.x = nebulaEnemy[0].frame * nebulaEnemy[0].rec.width;
-            nebulaEnemy[0].frame++;
-            if(nebulaEnemy[0].frame > 7){
-                nebulaEnemy[0].frame = 0;
+        for (int i = 0; i < sizeOfNebulaEnemy; i++ ){
+            nebulaEnemy[i].runningTime += dT;
+            if(nebulaEnemy[i].runningTime >= nebulaEnemy[i].updateTime){
+                nebulaEnemy[i].runningTime = 0.0;
+                //Update anim frame
+                nebulaEnemy[i].rec.x = nebulaEnemy[i].frame * nebulaEnemy[i].rec.width;
+                nebulaEnemy[i].frame++;
+                if(nebulaEnemy[i].frame > 7){
+                    nebulaEnemy[i].frame = 0;
+                }
             }
         }
 
-        //Update 2nd nebula animation frame
-        nebulaEnemy[1].runningTime += dT;
-        if(nebulaEnemy[1].runningTime >= nebulaEnemy[1].updateTime){
-            nebulaEnemy[1].runningTime = 0.0;
-            //Update anim frame
-            nebulaEnemy[1].rec.x = nebulaEnemy[1].frame * nebulaEnemy[1].rec.width;
-            nebulaEnemy[1].frame++;
-            if(nebulaEnemy[1].frame > 7){
-                nebulaEnemy[1].frame = 0;
-            }
+        for(int i = 0; i < sizeOfNebulaEnemy; i++){
+            //Draw nebula
+            DrawTextureRec(nebula, nebulaEnemy[i].rec, nebulaEnemy[i].pos, WHITE);
         }
 
         //Draw scarfy
         DrawTextureRec(scarfy, scarfyData.rec, scarfyData.pos, WHITE);
-        //Draw nebula
-        DrawTextureRec(nebula, nebulaEnemy[0].rec, nebulaEnemy[0].pos, WHITE);
-        DrawTextureRec(nebula, nebulaEnemy[1].rec, nebulaEnemy[1].pos, RED);
         
         //Stop drawing
         EndDrawing();
@@ -162,4 +151,5 @@ int main(){
     CloseWindow();
 
     return 0;
+
 }
