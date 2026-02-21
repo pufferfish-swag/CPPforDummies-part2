@@ -9,10 +9,25 @@ struct AnimData
     float runningTime;
 };
 
+//refactor ground check
 bool isOnGround(AnimData data, int windowHeight){
     return data.pos.y >= windowHeight - data.rec.height;
 }
 
+AnimData updateAnimData(AnimData data, float deltaTime, int maxFrame){
+    //update running time
+    data.runningTime += deltaTime;
+    if (data.runningTime >= data.updateTime){
+        data.runningTime = 0.0;
+        //update animation frame
+        data.rec.x  = data.frame * data.rec.width;
+        data.frame++;
+        if(data.frame > maxFrame){
+            data.frame = 0;
+        }
+    }
+    return data;
+}
 
 int main(){
     
@@ -111,17 +126,7 @@ int main(){
 
         //Check if scarfy jump or not. if it is, froze the animation.
         if(!isInAir){
-        //Update running animation time
-            scarfyData.runningTime += dT;
-            if(scarfyData.runningTime >= scarfyData.updateTime){
-                scarfyData.runningTime = 0.0;
-                //Update animation frame
-                scarfyData.rec.x = scarfyData.frame * scarfyData.rec.width;
-                scarfyData.frame++;
-                if(scarfyData.frame > 5){
-                scarfyData.frame = 0;
-                }
-            }
+            scarfyData = updateAnimData(scarfyData, dT, 5);
         }
 
         for (int i = 0; i < sizeOfNebulaEnemy; i++ ){
