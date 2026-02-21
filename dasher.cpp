@@ -90,6 +90,9 @@ int main(){
     //Initial position
     int velocity{0};
 
+    Texture2D background = LoadTexture("textures/far-buildings.png");
+    float bgX{};//Because the nomber will be filled later in while function
+
     SetTargetFPS(60);
     while (!WindowShouldClose())//! = negation operator. Negates a truth value
     {
@@ -99,6 +102,20 @@ int main(){
         //Start drawing
         BeginDrawing();
         ClearBackground(WHITE);
+        
+        //Move the background
+        bgX -= 20 * dT;
+        if (bgX <= -background.width*3){
+            bgX = 0.0;
+        }
+
+        const float bgScale{3.0};
+
+        //Draw backgorund
+        Vector2 bg1Pos{bgX, 0.0};
+        DrawTextureEx(background, bg1Pos, 0.0, bgScale, WHITE);
+        Vector2 bg2Pos{bgX + background.width*3, 0.0}; //bg width * 3 because bgScale is 3.
+        DrawTextureEx(background, bg2Pos, 0.0, bgScale, WHITE);
 
         //Set movement to scarfy, perform ground check
         if(isOnGround(scarfyData, windowDimension[1])){
@@ -130,16 +147,7 @@ int main(){
         }
 
         for (int i = 0; i < sizeOfNebulaEnemy; i++ ){
-            nebulaEnemy[i].runningTime += dT;
-            if(nebulaEnemy[i].runningTime >= nebulaEnemy[i].updateTime){
-                nebulaEnemy[i].runningTime = 0.0;
-                //Update anim frame
-                nebulaEnemy[i].rec.x = nebulaEnemy[i].frame * nebulaEnemy[i].rec.width;
-                nebulaEnemy[i].frame++;
-                if(nebulaEnemy[i].frame > 7){
-                    nebulaEnemy[i].frame = 0;
-                }
-            }
+            nebulaEnemy[i] = updateAnimData(nebulaEnemy[i], dT, 7);
         }
 
         for(int i = 0; i < sizeOfNebulaEnemy; i++){
@@ -157,6 +165,7 @@ int main(){
     //Unload it from leaking the GPU VRAM
     UnloadTexture(scarfy);
     UnloadTexture(nebula);
+    UnloadTexture(background);
     CloseWindow();
 
     return 0;
