@@ -33,8 +33,8 @@ int main(){
     
     //array with dimension
     int windowDimension[2];
-    windowDimension[0] = 720; //width
-    windowDimension[1] = 480; //height
+    windowDimension[0] = 768; //width
+    windowDimension[1] = 570; //height
 
     //Initialize window
     InitWindow(windowDimension[0], windowDimension[1], "Dashing but no dapping by Adjie Wahyudinata");
@@ -91,7 +91,12 @@ int main(){
     int velocity{0};
 
     Texture2D background = LoadTexture("textures/far-buildings.png");
-    float bgX{};//Because the nomber will be filled later in while function
+    float bgX{};//Because the number will be filled later in while function
+
+    Texture2D midground = LoadTexture("textures/back-buildings.png");
+    float mgX{};
+    Texture2D foreground = LoadTexture("textures/foreground.png");
+    float fgX{};
 
     SetTargetFPS(60);
     while (!WindowShouldClose())//! = negation operator. Negates a truth value
@@ -103,10 +108,20 @@ int main(){
         BeginDrawing();
         ClearBackground(WHITE);
         
-        //Move the background
+        //scroll background
         bgX -= 20 * dT;
         if (bgX <= -background.width*3){
             bgX = 0.0;
+        }
+        //scroll midground
+        mgX -= 40 * dT;
+        if (mgX <= -midground.width*3){
+            mgX = 0.0;
+        }
+        //scroll foreground
+        fgX -= 80 * dT;
+        if(fgX <= -foreground.width*3){
+            fgX = 0.0;
         }
 
         const float bgScale{3.0};
@@ -114,10 +129,22 @@ int main(){
         //Draw backgorund
         Vector2 bg1Pos{bgX, 0.0};
         DrawTextureEx(background, bg1Pos, 0.0, bgScale, WHITE);
-        Vector2 bg2Pos{bgX + background.width*3, 0.0}; //bg width * 3 because bgScale is 3.
+        Vector2 bg2Pos{bgX + background.width * 3, 0.0}; //bg width * 3 because bgScale is 3.
         DrawTextureEx(background, bg2Pos, 0.0, bgScale, WHITE);
+        
+        //Draw midground
+        Vector2 mg1Pos{mgX, 0.0};
+        DrawTextureEx(midground, mg1Pos, 0.0, bgScale, WHITE);
+        Vector2 mg2Pos{mgX + midground.width * 3, 0.0};
+        DrawTextureEx(midground, mg2Pos, 0.0, bgScale, WHITE);
+        
+        //Draw foreground
+        Vector2 fg1Pos{fgX, 0.0};
+        DrawTextureEx(foreground, fg1Pos, 0.0, bgScale, WHITE);
+        Vector2 fg2Pos{fgX + foreground.width * 3, 0.0};
+        DrawTextureEx(foreground, fg2Pos, 0.0, bgScale, WHITE);
 
-        //Set movement to scarfy, perform ground check
+        //perform ground check
         if(isOnGround(scarfyData, windowDimension[1])){
             //rectangle is in the ground
             velocity = 0;
@@ -166,6 +193,9 @@ int main(){
     UnloadTexture(scarfy);
     UnloadTexture(nebula);
     UnloadTexture(background);
+    UnloadTexture(midground);
+    UnloadTexture(foreground);
+    
     CloseWindow();
 
     return 0;
