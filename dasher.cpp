@@ -100,6 +100,9 @@ int main(){
     Texture2D foreground = LoadTexture("textures/foreground.png");
     float fgX{};
 
+    //game over checker
+    bool collision{};
+
     SetTargetFPS(60);
     while (!WindowShouldClose())//! = negation operator. Negates a truth value
     {
@@ -183,13 +186,50 @@ int main(){
             nebulaEnemy[i] = updateAnimData(nebulaEnemy[i], dT, 7);
         }
 
-        for(int i = 0; i < sizeOfNebulaEnemy; i++){
-            //Draw nebula
-            DrawTextureRec(nebula, nebulaEnemy[i].rec, nebulaEnemy[i].pos, WHITE);
+        for (AnimData nebula : nebulaEnemy){
+            
+            float pad{50};
+            
+            Rectangle nebRec{
+                nebula.pos.x + pad,
+                nebula.pos.y + pad,
+                nebula.rec.width - 2*pad,
+                nebula.rec.height - 2*pad
+            };
+            
+            Rectangle scarfyRec{
+                scarfyData.pos.x,
+                scarfyData.pos.y,
+                scarfyData.rec.width,
+                scarfyData.rec.height
+            };
+            
+            if (CheckCollisionRecs(nebRec, scarfyRec)){
+                collision = true;
+            }
         }
 
-        //Draw scarfy
-        DrawTextureRec(scarfy, scarfyData.rec, scarfyData.pos, WHITE);
+        if(collision){
+            
+            // lose the game dawg
+            DrawText("Game Over!", windowDimension[0]/4, windowDimension[1]/2, 50, MAROON);
+        
+        }else if(scarfyData.pos.x >= finishLine){
+            
+            // win the game dawg
+            DrawText("You Win!", windowDimension[0]/4, windowDimension[1]/2, 50, WHITE);
+
+        }else{
+            
+            for(int i = 0; i < sizeOfNebulaEnemy; i++){
+                //Draw nebula
+                DrawTextureRec(nebula, nebulaEnemy[i].rec, nebulaEnemy[i].pos, WHITE);
+            }
+
+            //Draw scarfy
+            DrawTextureRec(scarfy, scarfyData.rec, scarfyData.pos, WHITE);
+        
+        }
         
         //Stop drawing
         EndDrawing();
