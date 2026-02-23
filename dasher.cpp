@@ -63,6 +63,8 @@ int main(){
         nebulaEnemy[i].runningTime = 0.0;
         nebulaEnemy[i].updateTime = 1.0/16.0;
     }
+    //well.. finish line
+    float finishLine{nebulaEnemy[sizeOfNebulaEnemy - 1].pos.x};
 
     //nebula X velocity (pixels/sec)
     int nebVel{-200};
@@ -165,8 +167,12 @@ int main(){
             nebulaEnemy[i].pos.x += nebVel * dT;
         }
 
+        //update finishLine
+        finishLine += nebVel * dT;
+
         //Update position
         scarfyData.pos.y += velocity * dT;//posY = posY + velocity * dT
+        
 
         //Check if scarfy jump or not. if it is, froze the animation.
         if(!isInAir){
