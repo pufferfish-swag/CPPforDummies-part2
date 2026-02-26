@@ -195,11 +195,11 @@ int main(){
 
         //Check if scarfy jump or not. if it is, froze the animation.
         if(!isInAir){
-            scarfyData = updateAnimData(scarfyData, dT, maxFrameScarfy);
+            updateAnimData(scarfyData, dT, maxFrameScarfy);
         }
 
         for (int i = 0; i < sizeOfNebulaEnemy; i++ ){
-            nebulaEnemy[i] = updateAnimData(nebulaEnemy[i], dT, maxFrameNebulaEnemy);
+            updateAnimData(nebulaEnemy[i], dT, maxFrameNebulaEnemy);
         }
 
         for (const AnimData& nebula : nebulaEnemy){//Read only, not modify
